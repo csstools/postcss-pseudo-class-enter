@@ -4,7 +4,7 @@
 
 [PostCSS Pseudo-Class Enter] is a [PostCSS] plugin that allows you to use the proposed [`:enter`] pseudo-class in CSS.
 
-`:enter`  simplifies selectors targeting elements that are designated, as the naming of `:hover` is misleading; it specifically means elements designated with a pointing device, rather than any device.
+`:enter`  simplifies selectors targeting elements that are designated, as the naming of `:hover` is somewhat misleading; it specifically means elements designated with a pointing device, rather than any device.
 
 ```css
 /* before */
@@ -82,22 +82,34 @@ grunt.initConfig({
 
 ### Alternatives
 
-Here are a few other ways to simulate the effect of [PostCSS Pseudo-Class Enter].
+Below are some other methods to recreate the effects of `:enter`.
+
+#### Use @custom-selector (supported nowhere yet)
 
 ```css
-/* Use @custom-selector; supported nowhere yet */
-
 @custom-selector :--enter :focus, :hover;
 
 :--enter { /* ... */ }
+```
 
-/* Use :matches; supported in Firefox 4+, Chrome 12+, Opera 15+, Safari 5.1+ */
+#### Use :matches (supported in Firefox 4+, Chrome 12+, Opera 15+, Safari 5.1+)
 
+```css
 :matches(:focus, :hover) { /* ... */ }
+```
 
-/* Use :focus and :hover; supported everywhere */
+#### Use :focus and :hover (supported everywhere)
 
+```css
 :focus, :hover { /* ... */ }
+```
+
+#### Use [Sass] mixins (requires preprocessing)
+
+```scss
+@mixin -enter { &:focus, &:hover { @content; } }
+
+@include -enter { /* ... */ }
 ```
 
 [`:enter`]: http://discourse.specifiction.org/t/a-common-pseudo-class-for-hover-and-focus/877
@@ -109,3 +121,4 @@ Here are a few other ways to simulate the effect of [PostCSS Pseudo-Class Enter]
 [PostCSS]: https://github.com/postcss/postcss
 [PostCSS Pseudo-Class Enter]: https://github.com/jonathantneal/postcss-pseudo-class-enter
 [proposal]: http://discourse.specifiction.org/t/a-common-pseudo-class-for-hover-and-focus/877
+[Sass]: http://sass-lang.com/
