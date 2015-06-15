@@ -15,7 +15,7 @@ var test = function (input, output, opts, done) {
 
 describe('postcss-pseudo-class-enter', function () {
 	it(':enter transforms to :focus and :hover', function (done) {
-		test('ul a:enter > span { background: yellow; }', 'ul a:focus > span, ul a:hover > span { background: yellow; }', {}, done);
+		test('ul a:enter > span { background: yellow; }', 'ul a:focus > span,ul a:hover > span { background: yellow; }', {}, done);
 	});
 
 	it(':enter remains :enter { prefix: "foo" }', function (done) {
@@ -25,7 +25,7 @@ describe('postcss-pseudo-class-enter', function () {
 	});
 
 	it(':-foo-enter transforms to :focus and :hover { prefix: "foo" }', function (done) {
-		test('ul a:-foo-enter > span { background: yellow; }', 'ul a:focus > span, ul a:hover > span { background: yellow; }', {
+		test('ul a:-foo-enter > span { background: yellow; }', 'ul a:focus > span,ul a:hover > span { background: yellow; }', {
 			prefix: 'foo'
 		}, done);
 	});
