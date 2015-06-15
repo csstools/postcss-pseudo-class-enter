@@ -2,20 +2,29 @@
 
 <img align="right" width="135" height="95" src="http://postcss.github.io/postcss/logo-leftp.png" title="Philosopher’s stone, logo of PostCSS">
 
-[PostCSS Pseudo-Class Enter] is a [PostCSS] plugin that transforms the proposed `:enter` pseudo-class into `:focus` and `:hover`.
+[PostCSS Pseudo-Class Enter] is a [PostCSS] plugin that allows you to use the proposed [`:enter`] pseudo-class in CSS.
+
+`:enter`  simplifies selectors targeting elements that are designated, since the naming of `:hover` is misleading; it specifically means elements designated with a pointing device, rather than any device.
 
 ```css
-nav a:enter {
+/* before */
+
+nav :enter > span {
+	background-color: yellow;
+}
+
+/* after */
+
+nav :hover > span,
+nav :focus > span {
 	background-color: yellow;
 }
 ```
 
-```css
-nav a:focus,
-nav a:hover {
-	background-color: yellow;
-}
-```
+
+From the [proposal]:
+
+> The [`:enter`] pseudo-class applies while the user designates an element with a keyboard, pointing device, or other form of input. It matches an element if the element would match [`:focus`] or [`:hover`].
 
 ## Usage
 
@@ -42,7 +51,7 @@ Install [Grunt PostCSS]:
 npm install postcss-pseudo-class-enter --save-dev
 ```
 
-Enable it inside your Gruntfile:
+Enable [PostCSS Pseudo-Class Enter] within your Gruntfile:
 
 ```js
 grunt.loadNpmTasks('grunt-postcss');
@@ -61,10 +70,40 @@ grunt.initConfig({
 });
 ```
 
-See [PostCSS] docs for examples for your environment.
+### Options
 
+**prefix** (string): prepends a prefix (surrounded by dashes) to the pseudo-class, preventing any clash with native syntax.
+
+```js
+{
+	prefix: 'foo' // pseudo-class becomes :-foo-enter
+}
+```
+
+### Alternatives
+
+```css
+/* Using @custom-selector; supported nowhere yet */
+
+@custom-selector :--enter :focus, :hover;
+
+:--enter { /* ... */ }
+
+/* Using :matches; supported in Firefox 4+, Chrome 12+, Opera 15+, Safari 5.1+ */
+
+:matches(:focus, :hover) { /* ... */ }
+
+/* Using :focus and :hover; supported everywhere */
+
+:focus, :hover { /* ... */ }
+```
+
+[`:enter`]: http://discourse.specifiction.org/t/a-common-pseudo-class-for-hover-and-focus/877
+[`:focus`]: http://dev.w3.org/csswg/selectors/#focus-pseudo
+[`:hover`]: http://dev.w3.org/csswg/selectors/#visited-pseudo
+[ci]: https://travis-ci.org/jonathantneal/postcss-pseudo-class-any-link
+[ci-img]: https://travis-ci.org/jonathantneal/postcss-pseudo-class-any-link.svg
 [Grunt PostCSS]: https://github.com/nDmitry/grunt-postcss
 [PostCSS]: https://github.com/postcss/postcss
 [PostCSS Pseudo-Class Enter]: https://github.com/jonathantneal/postcss-pseudo-class-enter
-[ci-img]:  https://travis-ci.org/jonathantneal/postcss-pseudo-class-enter.svg
-[ci]:      https://travis-ci.org/jonathantneal/postcss-pseudo-class-enter
+[proposal]: http://discourse.specifiction.org/t/a-common-pseudo-class-for-hover-and-focus/877
