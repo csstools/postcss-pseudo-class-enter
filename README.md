@@ -4,7 +4,7 @@
 
 [PostCSS Pseudo-Class Enter] is a [PostCSS] plugin that allows you to use the proposed [`:enter`] pseudo-class in CSS.
 
-`:enter`  simplifies selectors targeting elements that are designated, since the naming of `:hover` is misleading; it specifically means elements designated with a pointing device, rather than any device.
+`:enter`  simplifies selectors targeting elements that are designated, as the naming of `:hover` is misleading; it specifically means elements designated with a pointing device, rather than any device.
 
 ```css
 /* before */
@@ -82,18 +82,20 @@ grunt.initConfig({
 
 ### Alternatives
 
+Here are a few other ways to simulate the effect of [PostCSS Pseudo-Class Enter].
+
 ```css
-/* Using @custom-selector; supported nowhere yet */
+/* Use @custom-selector; supported nowhere yet */
 
 @custom-selector :--enter :focus, :hover;
 
 :--enter { /* ... */ }
 
-/* Using :matches; supported in Firefox 4+, Chrome 12+, Opera 15+, Safari 5.1+ */
+/* Use :matches; supported in Firefox 4+, Chrome 12+, Opera 15+, Safari 5.1+ */
 
 :matches(:focus, :hover) { /* ... */ }
 
-/* Using :focus and :hover; supported everywhere */
+/* Use :focus and :hover; supported everywhere */
 
 :focus, :hover { /* ... */ }
 ```
