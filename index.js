@@ -1,24 +1,13 @@
 var postcss = require('postcss');
 
 module.exports = postcss.plugin('postcss-pseudo-class-enter', function (opts) {
-	// options
-	opts = typeof opts === 'object' ? opts : {};
+	var match = new RegExp(':' + (opts && opts.prefix ? '-' + opts.prefix + '-' : '') + 'enter\\b', 'g');
 
-	// prefix
-	opts.prefix = opts.prefix ? '-' + opts.prefix + '-' : '';
-
-	// regex
-	var pseudoElementRegExp = new RegExp(':' + opts.prefix + 'enter\\b', 'g');
-
-	// plugin
 	return function (css) {
-		// for each rule
 		css.eachRule(function (rule) {
-			// if the selector contains :enter
-			if (pseudoElementRegExp.test(rule.selector)) {
-				// replace :enter with :focus and :hover
-				rule.selector = ['focus', 'hover'].map(function (pseudoElement) {
-					return rule.selector.replace(pseudoElementRegExp, ':' + pseudoElement);
+			if (match.test(rule.selector)) {
+				rule.selector = ['focus', 'hover'].map(function (replacement) {
+					return rule.selector.replace(match, ':' + replacement);
 				}).join(', ');
 			}
 		});
