@@ -8,7 +8,6 @@
 		"no-unused-vars":        [2],
 		"no-loop-func":          [0],
 		"key-spacing":           [0],
-		"max-len":               [2],
 		"strict":                [0],
 		"indent":                [1, "tab"],
 		"quotes":                [2, "single", "avoid-escape"],
