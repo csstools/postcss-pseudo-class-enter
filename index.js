@@ -7,7 +7,7 @@ module.exports = postcss.plugin('postcss-pseudo-class-enter', function (opts) {
 
 	return function (css) {
 		// for each rule
-		css.eachRule(function (rule) {
+		css.walkRules(function (rule) {
 			// update the selector
 			rule.selector = postcssSelectorParser(function (selectors) {
 				// cache variables
