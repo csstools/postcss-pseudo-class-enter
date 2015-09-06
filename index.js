@@ -38,7 +38,7 @@ module.exports = postcss.plugin('postcss-pseudo-class-enter', function (opts) {
 							selectorHover.nodes[nodeIndex].value = ':hover';
 
 							// replace the selector with the clones and roll back the selector index
-							selectors.nodes.splice(selectorIndex--, 1, selectorFocus, selectorHover);
+							selectors.nodes.splice(selectorIndex--, 1, selectorHover, selectorFocus);
 
 							// stop updating the selector
 							break;

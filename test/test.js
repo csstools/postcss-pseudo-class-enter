@@ -16,15 +16,15 @@ var test = function (input, output, opts, done) {
 describe('postcss-pseudo-class-enter', function () {
 	// standard tests
 	it(':enter', function (done) {
-		test(':enter { background: blue; }', ':focus,:hover { background: blue; }', {}, done);
+		test(':enter { background: blue; }', ':hover,:focus { background: blue; }', {}, done);
 	});
 
 	it(':enter, ul a:enter > span', function (done) {
-		test(':enter, ul a:enter > span { background: blue; }', ':focus,:hover, ul a:focus > span, ul a:hover > span { background: blue; }', {}, done);
+		test(':enter, ul a:enter > span { background: blue; }', ':hover,:focus, ul a:hover > span, ul a:focus > span { background: blue; }', {}, done);
 	});
 
 	it(':enter :enter', function (done) {
-		test(':enter :enter { background: blue; }', ':focus :focus,:focus :hover,:hover :focus,:hover :hover { background: blue; }', {}, done);
+		test(':enter :enter { background: blue; }', ':hover :hover,:hover :focus,:focus :hover,:focus :focus { background: blue; }', {}, done);
 	});
 
 	// custom prefix tests
@@ -37,14 +37,14 @@ describe('postcss-pseudo-class-enter', function () {
 	});
 
 	it(':-foo-enter (with "foo" prefix)', function (done) {
-		test(':-foo-enter { background: blue; }', ':focus,:hover { background: blue; }', { prefix: 'foo' }, done);
+		test(':-foo-enter { background: blue; }', ':hover,:focus { background: blue; }', { prefix: 'foo' }, done);
 	});
 
 	it(':-foo-enter, ul a:-foo-enter > span (with "foo" prefix)', function (done) {
-		test(':-foo-enter, ul a:-foo-enter > span { background: blue; }', ':focus,:hover, ul a:focus > span, ul a:hover > span { background: blue; }', { prefix: 'foo' }, done);
+		test(':-foo-enter, ul a:-foo-enter > span { background: blue; }', ':hover,:focus, ul a:hover > span, ul a:focus > span { background: blue; }', { prefix: 'foo' }, done);
 	});
 
 	it(':-foo-enter :-foo-enter (with "foo" prefix)', function (done) {
-		test(':-foo-enter :-foo-enter { background: blue; }', ':focus :focus,:focus :hover,:hover :focus,:hover :hover { background: blue; }', { prefix: 'foo' }, done);
+		test(':-foo-enter :-foo-enter { background: blue; }', ':hover :hover,:hover :focus,:focus :hover,:focus :focus { background: blue; }', { prefix: 'foo' }, done);
 	});
 });
