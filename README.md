@@ -80,6 +80,14 @@ grunt.initConfig({
 }
 ```
 
+**removeFocusOutline** (boolean): removes focus outline (useful if you applied outline style with your hover/focus styles)
+
+```js
+{
+	removeFocusOutline: true // removes focus outline
+}
+```
+
 ### Alternatives
 
 Below are some other methods to recreate the effects of `:enter`.
