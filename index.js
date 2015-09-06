@@ -4,10 +4,19 @@ var postcssSelectorParser = require('postcss-selector-parser');
 module.exports = postcss.plugin('postcss-pseudo-class-enter', function (opts) {
 	// cache the enter value
 	var valueEnter = ':' + (opts && opts.prefix ? '-' + opts.prefix + '-' : '') + 'enter';
+	var removeFocusOutline = opts && opts.removeFocusOutline;
 
 	return function (css) {
 		// for each rule
 		css.walkRules(function (rule) {
+
+			// add focus outline removal
+			if ( removeFocusOutline ) {
+				if ( rule.selector.indexOf(valueEnter) !== -1 ) {
+					rule.prepend({ prop: 'outline', value: 0 });
+				}
+			}
+
 			// update the selector
 			rule.selector = postcssSelectorParser(function (selectors) {
 				// cache variables
