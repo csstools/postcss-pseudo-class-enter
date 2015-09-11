@@ -1,3 +1,7 @@
+## 2.0.1 (2015-09-11)
+
+- Updated: Documentation
+
 ## 2.0.0 (2015-09-11)
 
 - Added: Option to specify outline.

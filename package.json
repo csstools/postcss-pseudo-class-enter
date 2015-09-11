@@ -1,6 +1,6 @@
 {
   "name": "postcss-pseudo-class-enter",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Use the proposed :enter pseudo-class in CSS",
   "keywords": [
     "postcss",
