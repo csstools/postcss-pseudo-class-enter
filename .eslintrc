@@ -34,7 +34,6 @@
 		"no-control-regex":            [2],
 		"no-sparse-arrays":            [2],
 		"no-throw-literal":            [2],
-		"no-return-assign":            [2],
 		"no-const-assign":             [2],
 		"no-class-assign":             [2],
 		"no-extra-parens":             [2],

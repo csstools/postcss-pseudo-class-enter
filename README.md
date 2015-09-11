@@ -158,8 +158,12 @@ Below are some other methods to recreate the effects of `:enter`.
 
 [ci]: https://travis-ci.org/jonathantneal/postcss-pseudo-class-enter
 [ci-img]: https://travis-ci.org/jonathantneal/postcss-pseudo-class-enter.svg
+[`:enter`]: http://discourse.specifiction.org/t/a-common-pseudo-class-for-hover-and-focus/877
+[`:focus`]: http://dev.w3.org/csswg/selectors/#focus-pseudo
+[`:hover`]: http://dev.w3.org/csswg/selectors/#visited-pseudo
 [proposal]: http://discourse.specifiction.org/t/a-common-pseudo-class-for-hover-and-focus/877
 [Gulp PostCSS]: https://github.com/postcss/gulp-postcss
 [Grunt PostCSS]: https://github.com/nDmitry/grunt-postcss
 [PostCSS]: https://github.com/postcss/postcss
 [Pseudo Class Enter]: https://github.com/jonathantneal/postcss-pseudo-class-enter
+[Sass]: http://sass-lang.com/

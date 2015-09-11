@@ -1,3 +1,9 @@
+## 2.0.0 (2015-09-11)
+
+- Added: Option to specify outline.
+- Updated: LVHFA `:hover, :focus` ordering
+- Updated: Refactored plugin, documentation, and tests
+
 ## 1.0.0 (2015-09-01)
 
 - Updated: PostCSS 5
