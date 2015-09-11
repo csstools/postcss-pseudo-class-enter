@@ -112,14 +112,14 @@ grunt.initConfig({
 
 #### `prefix`
 
-Type: `String`
-Default: `_`
+Type: `String`  
+Default: `-`
 
 Adds the prefix surrounded by dashes before the pseudo-class.
 
 #### `outline`
 
-Type: `String`
+Type: `String`  
 Default: unset
 
 Adds an outline declaration to matching rules when an existing one does not already exist.
