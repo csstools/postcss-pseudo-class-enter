@@ -1,83 +1,71 @@
+var path    = require('path');
 var postcss = require('postcss');
 var expect  = require('chai').expect;
+var fs      = require('fs');
 
 var plugin = require('../');
 
-var test = function (input, output, opts, done) {
-	postcss([ plugin(opts) ]).process(input).then(function (result) {
-		expect(result.css).to.eql(output);
+function test(name, opts, done) {
+	var fixtureDir = './test/fixtures/';
+	var baseName   = name.split(':')[0];
+	var testName   = name.split(':').join('.');
+	var inputPath  = path.resolve(fixtureDir + baseName + '.css');
+	var actualPath = path.resolve(fixtureDir + testName + '.actual.css');
+	var expectPath = path.resolve(fixtureDir + testName + '.expect.css');
+
+	var inputCSS  = fs.readFileSync(inputPath, 'utf8');
+	var expectCSS = fs.readFileSync(expectPath, 'utf8');
+
+	postcss([plugin(opts)]).process(inputCSS, {
+		from: inputPath
+	}).then(function (result) {
+		var actualCSS = result.css;
+
+		fs.writeFileSync(actualPath, actualCSS);
+
+		expect(actualCSS).to.eql(expectCSS);
 		expect(result.warnings()).to.be.empty;
+
 		done();
 	}).catch(function (error) {
 		done(error);
 	});
-};
+}
 
 describe('postcss-pseudo-class-enter', function () {
-	// standard tests
 	it(':enter', function (done) {
-		test(':enter { background: blue; }', ':hover,:focus { background: blue; }', {}, done);
+		test('enter', {}, done);
 	});
 
-	it(':enter, ul a:enter > span', function (done) {
-		test(':enter, ul a:enter > span { background: blue; }', ':hover,:focus, ul a:hover > span, ul a:focus > span { background: blue; }', {}, done);
+	it(':enter { prefix: "x" }', function (done) {
+		test('enter:prefix-x', { prefix: 'x' }, done);
 	});
 
-	it(':enter :enter', function (done) {
-		test(':enter :enter { background: blue; }', ':hover :hover,:hover :focus,:focus :hover,:focus :focus { background: blue; }', {}, done);
+	it(':enter (mixed usage)', function (done) {
+		test('mixed', {}, done);
 	});
 
-	// custom prefix tests
-	it(':enter (with "foo" prefix)', function (done) {
-		test(':enter { background: blue; }', ':enter { background: blue; }', { prefix: 'foo' }, done);
+	it(':enter (mixed usage) { prefix: "x" }', function (done) {
+		test('mixed:prefix-x', { prefix: 'x' }, done);
 	});
 
-	it(':-foo-enter (with no prefix)', function (done) {
-		test(':-foo-enter { background: blue; }', ':-foo-enter { background: blue; }', {}, done);
+	it(':enter { outline: 0 }', function (done) {
+		test('enter:outline-0', { outline: 0 }, done);
 	});
 
-	it(':-foo-enter (with "foo" prefix)', function (done) {
-		test(':-foo-enter { background: blue; }', ':hover,:focus { background: blue; }', { prefix: 'foo' }, done);
+	it(':enter { outline: "1px solid white" }', function (done) {
+		test('enter:outline-1px-solid-white', { outline: '1px solid white' }, done);
 	});
 
-	it(':-foo-enter, ul a:-foo-enter > span (with "foo" prefix)', function (done) {
-		test(':-foo-enter, ul a:-foo-enter > span { background: blue; }', ':hover,:focus, ul a:hover > span, ul a:focus > span { background: blue; }', { prefix: 'foo' }, done);
+	it(':x-enter', function (done) {
+		test('x-enter', {}, done);
 	});
 
-	it(':-foo-enter :-foo-enter (with "foo" prefix)', function (done) {
-		test(':-foo-enter :-foo-enter { background: blue; }', ':hover :hover,:hover :focus,:focus :hover,:focus :focus { background: blue; }', { prefix: 'foo' }, done);
+	it(':x-enter { prefix: "x" }', function (done) {
+		test('x-enter:prefix-x', { prefix: 'x' }, done);
 	});
 
-	// removed focus outline tests
-	it(':enter (with removed focus outline)', function (done) {
-		test(':enter { background: blue; }', ':focus,:hover { outline: 0; background: blue; }', { removeFocusOutline: true }, done);
-	});
-
-	it(':enter, ul a:enter > span (with removed focus outline)', function (done) {
-		test(':enter, ul a:enter > span { background: blue; }', ':focus,:hover, ul a:focus > span, ul a:hover > span { outline: 0; background: blue; }', { removeFocusOutline: true }, done);
-	});
-
-	it(':enter :enter (with removed focus outline)', function (done) {
-		test(':enter :enter { background: blue; }', ':focus :focus,:focus :hover,:hover :focus,:hover :hover { outline: 0; background: blue; }', { removeFocusOutline: true }, done);
-	});
-
-	it(':enter (with "foo" prefix, with removed focus outline)', function (done) {
-		test(':enter { background: blue; }', ':enter { background: blue; }', { prefix: 'foo', removeFocusOutline: true }, done);
-	});
-
-	it(':-foo-enter (with no prefix, with removed focus outline)', function (done) {
-		test(':-foo-enter { background: blue; }', ':-foo-enter { background: blue; }', { removeFocusOutline: true }, done);
-	});
-
-	it(':-foo-enter (with "foo" prefix, with removed focus outline)', function (done) {
-		test(':-foo-enter { background: blue; }', ':focus,:hover { outline: 0; background: blue; }', { prefix: 'foo', removeFocusOutline: true }, done);
-	});
-
-	it(':-foo-enter, ul a:-foo-enter > span (with "foo" prefix, with removed focus outline)', function (done) {
-		test(':-foo-enter, ul a:-foo-enter > span { background: blue; }', ':focus,:hover, ul a:focus > span, ul a:hover > span { outline: 0; background: blue; }', { prefix: 'foo', removeFocusOutline: true }, done);
-	});
-
-	it(':-foo-enter :-foo-enter (with "foo" prefix, with removed focus outline)', function (done) {
-		test(':-foo-enter :-foo-enter { background: blue; }', ':focus :focus,:focus :hover,:hover :focus,:hover :hover { outline: 0; background: blue; }', { prefix: 'foo', removeFocusOutline: true }, done);
+	it(':x-enter { outline: 0, prefix: "x" }', function (done) {
+		test('x-enter:outline-0-prefix-x', { outline: 0, prefix: 'x' }, done);
 	});
 });
