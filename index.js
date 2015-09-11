@@ -1,60 +1,87 @@
+var extend  = require('util')._extend;
+var parser  = require('postcss-selector-parser');
 var postcss = require('postcss');
-var postcssSelectorParser = require('postcss-selector-parser');
 
 module.exports = postcss.plugin('postcss-pseudo-class-enter', function (opts) {
-	// cache the enter value
-	var valueEnter = ':' + (opts && opts.prefix ? '-' + opts.prefix + '-' : '') + 'enter';
-	var removeFocusOutline = opts && opts.removeFocusOutline;
+	opts = extend({}, opts);
 
-	return function (css) {
-		// for each rule
-		css.walkRules(function (rule) {
+	var value   = ':' + (opts.prefix ? '-' + opts.prefix + '-' : '') + 'enter';
+	var outline = 'outline' in opts ? opts.outline || '0' : false;
 
-			// add focus outline removal
-			if ( removeFocusOutline ) {
-				if ( rule.selector.indexOf(valueEnter) !== -1 ) {
-					rule.prepend({ prop: 'outline', value: 0 });
+	// transform :enter selector to :focus, :hover
+	var transform = function (selectors) {
+		// define variables
+		var node;
+		var nodeIndex;
+		var selector;
+		var selectorFocus;
+		var selectorHover;
+
+		// define the selector index
+		var selectorIndex = -1;
+
+		// for each selector
+		while (selector = selectors.nodes[++selectorIndex]) {
+			// reset the node index
+			nodeIndex = -1;
+
+			// for each node
+			while (node = selector.nodes[++nodeIndex]) {
+				// if the node value matches the enter value
+				if (node.value === value) {
+					// clone the selector
+					selectorFocus = selector.clone();
+					selectorHover = selector.clone();
+
+					// update the matching clone values
+					selectorFocus.nodes[nodeIndex].value = ':focus';
+					selectorHover.nodes[nodeIndex].value = ':hover';
+
+					// replace the selector with the clones and roll back the selector index
+					selectors.nodes.splice(selectorIndex--, 1, selectorHover, selectorFocus);
+
+					// stop updating the selector
+					break;
 				}
 			}
+		}
+	};
 
-			// update the selector
-			rule.selector = postcssSelectorParser(function (selectors) {
-				// cache variables
-				var node;
-				var nodeIndex;
-				var selector;
-				var selectorFocus;
-				var selectorHover;
+	return function (css) {
+		return new Promise(function (resolve) {
+			// walk each rule in the stylesheet
+			css.walkRules(function (rule) {
+				// parse the selector
+				var selector = parser(transform).process(rule.selector).result;
 
-				// cache the selector index
-				var selectorIndex = -1;
+				// if the selector has changed
+				if (selector !== rule.selector) {
+					// update the selector
+					rule.selector = selector;
 
-				// for each selector
-				while (selector = selectors.nodes[++selectorIndex]) {
-					// reset the node index
-					nodeIndex = -1;
+					// if an outline value has been defined
+					if (outline) {
+						// define no outline
+						var noOutline = true;
 
-					// for each node
-					while (node = selector.nodes[++nodeIndex]) {
-						// if the node value matches the enter value
-						if (node.value === valueEnter) {
-							// clone the selector
-							selectorFocus = selector.clone();
-							selectorHover = selector.clone();
+						// check for outline declaration
+						rule.walkDecls('outline', function () {
+							return noOutline = false;
+						});
 
-							// update the matching clone values
-							selectorFocus.nodes[nodeIndex].value = ':focus';
-							selectorHover.nodes[nodeIndex].value = ':hover';
-
-							// replace the selector with the clones and roll back the selector index
-							selectors.nodes.splice(selectorIndex--, 1, selectorHover, selectorFocus);
-
-							// stop updating the selector
-							break;
+						// if outline declaration does not exist
+						if (noOutline) {
+							// prepend the outline declaration to the rule
+							rule.prepend({
+								prop:  'outline',
+								value: outline
+							});
 						}
 					}
 				}
-			}).process(rule.selector).result;
+			});
+
+			resolve();
 		});
 	};
 });
