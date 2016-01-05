@@ -48,40 +48,36 @@ module.exports = postcss.plugin('postcss-pseudo-class-enter', function (opts) {
 	};
 
 	return function (css) {
-		return new Promise(function (resolve) {
-			// walk each rule in the stylesheet
-			css.walkRules(function (rule) {
-				// parse the selector
-				var selector = parser(transform).process(rule.selector).result;
+		// walk each rule in the stylesheet
+		css.walkRules(function (rule) {
+			// parse the selector
+			var selector = parser(transform).process(rule.selector).result;
 
-				// if the selector has changed
-				if (selector !== rule.selector) {
-					// update the selector
-					rule.selector = selector;
+			// if the selector has changed
+			if (selector !== rule.selector) {
+				// update the selector
+				rule.selector = selector;
 
-					// if an outline value has been defined
-					if (outline) {
-						// define no outline
-						var noOutline = true;
+				// if an outline value has been defined
+				if (outline) {
+					// define no outline
+					var noOutline = true;
 
-						// check for outline declaration
-						rule.walkDecls('outline', function () {
-							return noOutline = false;
+					// check for outline declaration
+					rule.walkDecls('outline', function () {
+						return noOutline = false;
+					});
+
+					// if outline declaration does not exist
+					if (noOutline) {
+						// prepend the outline declaration to the rule
+						rule.prepend({
+							prop:  'outline',
+							value: outline
 						});
-
-						// if outline declaration does not exist
-						if (noOutline) {
-							// prepend the outline declaration to the rule
-							rule.prepend({
-								prop:  'outline',
-								value: outline
-							});
-						}
 					}
 				}
-			});
-
-			resolve();
+			}
 		});
 	};
 });
