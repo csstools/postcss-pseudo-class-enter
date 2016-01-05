@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/jonathantneal/postcss-pseudo-class-enter",
   "dependencies": {
+    "object-assign": "^4.0.1",
     "postcss": "^5.0.4",
     "postcss-selector-parser": "^1.2.0"
   },

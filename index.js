@@ -1,9 +1,9 @@
-var extend  = require('util')._extend;
+var assign  = require('object-assign');
 var parser  = require('postcss-selector-parser');
 var postcss = require('postcss');
 
 module.exports = postcss.plugin('postcss-pseudo-class-enter', function (opts) {
-	opts = extend({}, opts);
+	opts = assign({}, opts);
 
 	var value   = ':' + (opts.prefix ? '-' + opts.prefix + '-' : '') + 'enter';
 	var outline = 'outline' in opts ? opts.outline || '0' : false;
