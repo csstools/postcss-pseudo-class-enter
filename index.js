@@ -1,44 +1,29 @@
-var assign  = require('object-assign');
-var parser  = require('postcss-selector-parser');
-var postcss = require('postcss');
+// tooling
+const postcss = require('postcss');
+const parser = require('postcss-selector-parser');
 
-module.exports = postcss.plugin('postcss-pseudo-class-enter', function (opts) {
-	opts = assign({}, opts);
-
-	var value   = ':' + (opts.prefix ? '-' + opts.prefix + '-' : '') + 'enter';
-	var outline = 'outline' in opts ? opts.outline || '0' : false;
+// plugin
+module.exports = postcss.plugin('postcss-pseudo-class-enter', ({
+	outline = false,
+	prefix = ''
+}) => {
+	// prefixed node value
+	const value = `:${ prefix ? `-${ prefix }-` : '' }enter`;
 
 	// transform :enter selector to :focus, :hover
-	var transform = function (selectors) {
-		// define variables
-		var node;
-		var nodeIndex;
-		var selector;
-		var selectorFocus;
-		var selectorHover;
-
-		// define the selector index
-		var selectorIndex = -1;
-
+	const transform = (selectors) => {
 		// for each selector
-		while (selector = selectors.nodes[++selectorIndex]) {
-			// reset the node index
-			nodeIndex = -1;
-
+		for (let selector of selectors.nodes) {
 			// for each node
-			while (node = selector.nodes[++nodeIndex]) {
+			for (let node of selector.nodes) {
 				// if the node value matches the enter value
 				if (node.value === value) {
-					// clone the selector
-					selectorFocus = selector.clone();
-					selectorHover = selector.clone();
+					// update the matching values
+					node.value = ':hover';
 
-					// update the matching clone values
-					selectorFocus.nodes[nodeIndex].value = ':focus';
-					selectorHover.nodes[nodeIndex].value = ':hover';
+					selectors.insertBefore(selector, selector.clone());
 
-					// replace the selector with the clones and roll back the selector index
-					selectors.nodes.splice(selectorIndex--, 1, selectorHover, selectorFocus);
+					node.value = ':focus';
 
 					// stop updating the selector
 					break;
@@ -47,11 +32,11 @@ module.exports = postcss.plugin('postcss-pseudo-class-enter', function (opts) {
 		}
 	};
 
-	return function (css) {
+	return (css) => {
 		// walk each rule in the stylesheet
-		css.walkRules(function (rule) {
+		css.walkRules((rule) => {
 			// parse the selector
-			var selector = parser(transform).process(rule.selector).result;
+			let selector = parser(transform).process(rule.selector).result;
 
 			// if the selector has changed
 			if (selector !== rule.selector) {
@@ -59,13 +44,15 @@ module.exports = postcss.plugin('postcss-pseudo-class-enter', function (opts) {
 				rule.selector = selector;
 
 				// if an outline value has been defined
-				if (outline) {
+				if (outline !== false) {
 					// define no outline
-					var noOutline = true;
+					let noOutline = true;
 
 					// check for outline declaration
-					rule.walkDecls('outline', function () {
-						return noOutline = false;
+					rule.walkDecls('outline', () => {
+						noOutline = false;
+
+						return false;
 					});
 
 					// if outline declaration does not exist
@@ -73,7 +60,7 @@ module.exports = postcss.plugin('postcss-pseudo-class-enter', function (opts) {
 						// prepend the outline declaration to the rule
 						rule.prepend({
 							prop:  'outline',
-							value: outline
+							value: outline || 0
 						});
 					}
 				}

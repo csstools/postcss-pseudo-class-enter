@@ -1,0 +1,4 @@
+:-x-enter,
+ul a:-x-enter > span {
+	background: blue;
+}
