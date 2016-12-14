@@ -6,7 +6,7 @@ const parser = require('postcss-selector-parser');
 module.exports = postcss.plugin('postcss-pseudo-class-enter', ({
 	outline = false,
 	prefix = ''
-}) => {
+} = {}) => {
 	// prefixed node value
 	const value = `:${ prefix ? `-${ prefix }-` : '' }enter`;
 
@@ -33,7 +33,7 @@ module.exports = postcss.plugin('postcss-pseudo-class-enter', ({
 	};
 
 	return (css) => {
-		// walk each rule in the stylesheet
+		// walk each rule
 		css.walkRules((rule) => {
 			// parse the selector
 			let selector = parser(transform).process(rule.selector).result;
@@ -68,3 +68,10 @@ module.exports = postcss.plugin('postcss-pseudo-class-enter', ({
 		});
 	};
 });
+
+// override plugin#process
+module.exports.process = function (cssString, pluginOptions, processOptions) {
+	return postcss([
+		0 in arguments ? module.exports(pluginOptions) : module.exports()
+	]).process(cssString, processOptions);
+};
