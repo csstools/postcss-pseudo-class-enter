@@ -1,0 +1,8 @@
+:enter, ul a:enter:active > span {
+	order: 1;
+}
+
+:enter, ul a:enter:active > span {
+	order: 2;
+	outline: 0;
+}

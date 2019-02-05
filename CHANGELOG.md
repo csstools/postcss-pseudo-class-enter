@@ -1,4 +1,9 @@
-# Changes to :enter
+# Changes to PostCSS Enter Pseudo Class
+
+### 4.0.0 (February 5, 2019)
+
+- Support PostCSS 7
+- Support Node 6
 
 ### 3.0.1 (December 8, 2016)
 
