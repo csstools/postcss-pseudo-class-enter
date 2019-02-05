@@ -1,0 +1,9 @@
+:focus,:hover, ul a:hover:active > span, ul a:focus:active > span {
+	outline: 0;
+	order: 1;
+}
+
+:focus,:hover, ul a:hover:active > span, ul a:focus:active > span {
+	order: 2;
+	outline: 0;
+}
