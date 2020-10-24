@@ -35,7 +35,7 @@ From the [proposal]:
 Add [PostCSS Enter Pseudo Class] to your project:
 
 ```bash
-npm install postcss-pseudo-class-enter --save-dev
+npm install postcss postcss-pseudo-class-enter --save-dev
 ```
 
 Use [PostCSS Enter Pseudo Class] to process your CSS:
