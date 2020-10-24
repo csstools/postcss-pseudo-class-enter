@@ -23,7 +23,7 @@
     "test:tape": "postcss-tape"
   },
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=10"
   },
   "dependencies": {
     "postcss-selector-parser": "^6.0.4"
